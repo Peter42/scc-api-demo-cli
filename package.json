@@ -16,5 +16,9 @@
     "inquirer": "^5.1.0",
     "inquirer-command-prompt": "0.0.7",
     "node-fetch": "^2.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.wdf.sap.corp/Connectivity-CF-PM/scc-api-demo-cli.git"
   }
 }
