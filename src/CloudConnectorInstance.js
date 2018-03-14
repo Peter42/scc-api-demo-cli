@@ -29,9 +29,18 @@ class CloudConnectorInstance {
 		return `Basic ${this._getEndocedUserAndPassword()}`;
 	}
 	
-	getJson(endpoint, isAbsolute) {
+	post(endpoint, body, contenttype, isAbsolute) {
 		let url = (isAbsolute ? this._getBaseUrl() : this._getApiUrl() ) + endpoint;
-		return fetch(url, {headers: {'Authorization': this._getBasicAuthHeader()}, redirect: 'manual'})
+		return fetch(url, {method: 'POST', body: body, headers: {'Authorization': this._getBasicAuthHeader(), 'Content-Type': contenttype}, redirect: 'manual'});
+	}
+	
+	get(endpoint, isAbsolute) {
+		let url = (isAbsolute ? this._getBaseUrl() : this._getApiUrl() ) + endpoint;
+		return fetch(url, {headers: {'Authorization': this._getBasicAuthHeader()}, redirect: 'manual'});
+	}
+	
+	getJson(endpoint, isAbsolute) {
+		return this.get(endpoint, isAbsolute)
 		.then(response => {
 			return response.json();
 		});

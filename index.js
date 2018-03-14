@@ -7,6 +7,8 @@ const colors = require('colors');
 const Configuration = require('./src/Configuration');
 const CloudConnectorInstance = require('./src/CloudConnectorInstance');
 
+const commandsBackup = require('./src/commands/Backup.js');
+
 function nextCmd(prompt) {
 	return inquirer.prompt([
 		{ type: 'command', name: 'cmd', message: prompt, autoCompletion: completer, context: 0 }
@@ -155,7 +157,7 @@ function commandSwitchInstance() {
 }
 
 
-commands = {
+let commands = {
 	'help': {
 		help: 'Print help info',
 		fn: printHelp
@@ -191,6 +193,7 @@ commands = {
 		fn: commandConfigAddInstance
 	}
 };
+Object.assign(commands, commandsBackup);
 
 function completer(text) {
 	const parts = text.split(/ +/);
@@ -235,6 +238,8 @@ function getActiveInstance() {
 		resolve(activeInstance);
 	});
 }
+// TODO: is there better way? maybe pass the function as parameter to every command, but refactoring would be needed.
+global.getActiveInstance = getActiveInstance;
 
 Configuration.load().then(config => {
 	let instances = config.CloudConnectorInstance;
