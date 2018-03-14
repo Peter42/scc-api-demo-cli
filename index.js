@@ -7,6 +7,7 @@ const colors = require('colors');
 const Configuration = require('./src/Configuration');
 const CloudConnectorInstance = require('./src/CloudConnectorInstance');
 
+const commandsSubaccounts = require('./src/commands/Subaccounts.js');
 const commandsBackup = require('./src/commands/Backup.js');
 
 function nextCmd(prompt) {
@@ -17,16 +18,6 @@ function nextCmd(prompt) {
 	}).catch(err => {
 		console.error(err.stack)
 	});
-}
-
-function getLinkHref(data, name) {
-	link = data._links.filter(item => {
-		return item.rel === name;
-	});
-	if(link.length === 0) {
-		return null;
-	}
-	return link[0].href;
 }
 
 function printHelp() {
@@ -46,41 +37,6 @@ function printHelp() {
 	}
 	
 	return Promise.resolve();
-}
-
-function commandListSubaccounts() {
-	return getActiveInstance()
-	.then(config => config.getJson('subaccounts', false))
-	.then(subaccounts => {
-		subaccounts.forEach(subaccount => {
-			console.log(`${subaccount.regionHost}/${subaccount.subaccount}`);
-		});
-	});
-}
-function commandDetailSubaccount([subaccount]) {
-	if(!subaccount) {
-		return Promise.reject('Provide Subaccount-name as argument (regionHost/subaccount)');
-	}
-	
-	return getActiveInstance()
-	.then(config => {
-		return config.getJson('subaccounts/' + subaccount, false)
-		.then(data => {
-			console.log(`${data.regionHost}/${data.subaccount}`);
-			console.log(`\tDisplay Name: ${data.displayName}`);
-			console.log(`\tDescription: ${data.description}`);
-			console.log(`\tLocation-ID: ${data.locationID}`);
-			console.log(`\tTunnel:\n\t\tState: ${data.tunnel.state}\n\t\tConnected Since: ${data.tunnel.connectedSince}\n\t\tUser: ${data.tunnel.user}`);
-			return config.getJson(getLinkHref(data, 'systemMappings'), true);
-		})
-		.then(mappings => {
-			console.log('\tMappings:');
-			mappings.forEach(mapping => {
-				console.log(`\t\t${mapping.virtualHost}:${mapping.virtualPort} ---${mapping.protocol}--->  ${mapping.localHost}:${mapping.localPort}`);
-			});
-		});
-		
-	});
 }
 
 function commandConfigPrettyprint() {
@@ -173,16 +129,6 @@ let commands = {
 		fn: commandSwitchInstance
 	},
 	
-	'subaccounts-list': {
-		help: 'List Subaccounts',
-		fn: commandListSubaccounts
-	},
-	
-	'subaccounts-details': {
-		help: 'Print detailed information about a Subaccount',
-		fn: commandDetailSubaccount
-	},
-	
 	'config-prettyprint': {
 		help: 'Formats your config file (e.g. after editing it manually)',
 		fn: commandConfigPrettyprint
@@ -193,7 +139,7 @@ let commands = {
 		fn: commandConfigAddInstance
 	}
 };
-Object.assign(commands, commandsBackup);
+Object.assign(commands, commandsBackup, commandsSubaccounts);
 
 function completer(text) {
 	const parts = text.split(/ +/);
