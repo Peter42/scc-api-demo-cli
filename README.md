@@ -1,5 +1,6 @@
 # scc_cli
 A Command Line Client for the Cloud Connector as Demo of the API.
+![Demo](documentation/demo.gif)
 
 ## DISCLAIMER
 **This CLI tool is for demo of the SCC API only!**
