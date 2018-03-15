@@ -1,12 +1,10 @@
 /*
  * Commands to list all subaccounts and show details of one subaccount
  */
- 
-const utils = require('../Utils');
 
 function commandListSubaccounts() {
 	return getActiveInstance()
-	.then(config => config.getJson('subaccounts', false))
+	.then(instance => instance.getSubaccounts())
 	.then(subaccounts => {
 		subaccounts.forEach(subaccount => {
 			console.log(`${subaccount.regionHost}/${subaccount.subaccount}`);
@@ -14,21 +12,21 @@ function commandListSubaccounts() {
 	});
 }
 
-function commandDetailSubaccount([subaccount]) {
-	if(!subaccount) {
+function commandDetailSubaccount([subaccountName]) {
+	if(!subaccountName) {
 		return Promise.reject('Provide Subaccount-name as argument (regionHost/subaccount)');
 	}
 	
 	return getActiveInstance()
-	.then(config => {
-		return config.getJson('subaccounts/' + subaccount, false)
-		.then(data => {
-			console.log(`${data.regionHost}/${data.subaccount}`);
-			console.log(`\tDisplay Name: ${data.displayName}`);
-			console.log(`\tDescription: ${data.description}`);
-			console.log(`\tLocation-ID: ${data.locationID}`);
-			console.log(`\tTunnel:\n\t\tState: ${data.tunnel.state}\n\t\tConnected Since: ${data.tunnel.connectedSince}\n\t\tUser: ${data.tunnel.user}`);
-			return config.getJson(utils.getLinkHref(data, 'systemMappings'), true);
+	.then(instance => {
+		return instance.getSubaccount(subaccountName)
+		.then(subaccount => {
+			console.log(`${subaccount.regionHost}/${subaccount.subaccount}`);
+			console.log(`\tDisplay Name: ${subaccount.displayName}`);
+			console.log(`\tDescription: ${subaccount.description}`);
+			console.log(`\tLocation-ID: ${subaccount.locationID}`);
+			console.log(`\tTunnel:\n\t\tState: ${subaccount.tunnel.state}\n\t\tConnected Since: ${subaccount.tunnel.connectedSince}\n\t\tUser: ${subaccount.tunnel.user}`);
+			return instance.getSubaccountMappings(subaccount);
 		})
 		.then(mappings => {
 			console.log('\tMappings:');

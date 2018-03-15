@@ -57,7 +57,7 @@ function commandCreateBackup() {
 	.then(([instance, backupLocation]) => {
 		return _readBackupPassword()
 		.then(password => {
-			return instance.post('backup', JSON.stringify({password: password}), 'application/json', false)
+			return instance.createBackup(password);
 		})
 		.then(res => {
 			return new Promise(function(resolve, reject) {

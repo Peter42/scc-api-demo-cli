@@ -68,7 +68,7 @@ function commandConfigAddInstance() {
 
 function commandCommonDescription() {
 	return getActiveInstance()
-	.then(config => config.getJson('connector', false))
+	.then(instance => instance.getCommonDescription())
 	.then(data => {
 		let role = "<none>";
 		let description = "<none>";
