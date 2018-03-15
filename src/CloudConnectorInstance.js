@@ -1,5 +1,5 @@
 /*
- * Promise based access to the Cloud Connector API, very low level (only json parsing)
+ * Promise based access to the Cloud Connector API
  */
 
 const fetch = require('node-fetch');
