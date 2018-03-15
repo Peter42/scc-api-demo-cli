@@ -10,7 +10,7 @@ A Command Line Client for the Cloud Connector as Demo of the API.
 ## Install
 1. Install node and npm.
 1. Open a Terminal and run `npm bin --global`. This will print the bin directory of npm. Add it to your PATH-Variable. This is OS specific, Google will help you.
-1. Run `npm install --global git+https://github.wdf.sap.corp/Connectivity-CF-PM/scc-api-demo-cli.git`
+1. Run `npm install --global git+https://github.com/Peter42/scc-api-demo-cli.git`
 
 ## Use
 1. Open a Terminal.
